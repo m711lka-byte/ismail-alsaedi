@@ -90,12 +90,12 @@ export function generateRssFeed(articles: Article[], baseUrl = brandConfig.baseU
     <link>${baseUrl}</link>
     <description><![CDATA[${brandConfig.bio} - ${brandConfig.location.address}]]></description>
     <language>ar-sa</language>
-    <copyright>جميع الحقوق محفوظة منصة إسماعيل الساعدي ${new Date().getFullYear()}</copyright>
+    <copyright><![CDATA[جميع الحقوق محفوظة منصة إسماعيل الساعدي ${new Date().getFullYear()}]]></copyright>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
     <atom:link href="${baseUrl}/rss.xml" rel="self" type="application/rss+xml" />
     <image>
       <url>${baseUrl}/icon.png</url>
-      <title>${brandConfig.name}</title>
+      <title><![CDATA[${brandConfig.name}]]></title>
       <link>${baseUrl}</link>
     </image>
 ${itemsXml}

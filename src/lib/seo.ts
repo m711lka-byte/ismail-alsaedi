@@ -106,30 +106,45 @@ ${itemsXml}
 /**
  * Generate Sitemap XML dynamically from an array of articles
  */
-export function generateSitemap(articles: Article[], baseUrl = brandConfig.baseUrl): string {
-  const urlsXml = articles.map(article => {
-    const rawDate = article.updatedDate || article.publishDate || '2026-08-12';
-    const isoDate = rawDate.includes('T') ? rawDate : `${rawDate}T17:00:00+03:00`;
-    return `  <url>
-    <loc>${baseUrl}/articles/${article.slug}</loc>
-    <lastmod>${isoDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+function escapeXml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
+export function generateSitemap(
+  articles: Article[],
+  baseUrl = brandConfig.baseUrl
+): string {
+  const urlsXml = articles
+    .map((article) => {
+      const url = `${baseUrl}/articles/${article.slug}`;
+
+      const date = article.updatedDate || article.publishDate;
+
+      const lastmod = date
+        ? new Date(date).toISOString()
+        : new Date().toISOString();
+
+      return `  <url>
+    <loc>${escapeXml(url)}</loc>
+    <lastmod>${lastmod}</lastmod>
   </url>`;
-  }).join('\n');
+    })
+    .join('\n');
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>${baseUrl}/</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}T17:00:00+03:00</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
+    <loc>${escapeXml(baseUrl)}/</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
   </url>
 ${urlsXml}
 </urlset>`;
 }
-
 /**
  * Dynamically inject or update JSON-LD Schema in the client DOM <head>
  */

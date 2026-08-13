@@ -1,0 +1,6 @@
+{
+  "name": "منصة مقالات إسماعيل الساعدي",
+  "description": "منصة مقالات احترافية متخصصة في البرمجة، اليوميات، الإعلانات والخدمات مع دعم الفايربيس وتهيئة RSS و محركات البحث والذكاء الاصطناعي.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

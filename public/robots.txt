@@ -1,0 +1,22 @@
+User-agent: *
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+# Dynamic Sitemap and RSS Feeds generated from Source Code:
+Sitemap: https://esmail-alsaadi.com/sitemap.xml
+RSS: https://esmail-alsaadi.com/rss.xml
+Location: الطائف, المملكة العربية السعودية (21.2854° N, 40.4244° E)

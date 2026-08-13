@@ -31,7 +31,51 @@ import {
 export default function App() {
   const [articles, setArticles] = useState<Article[]>(() => getMergedArticles([]));
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
-  const [activeTab, setActiveTab] = useState<'articles' | 'profile' | 'identity' | 'template' | 'tech' | 'editor' | 'admin'>('articles');
+  // Path Router helper to support custom URLs like /ismailalsaedy
+  const getTabFromPath = (path: string): 'articles' | 'profile' | 'identity' | 'template' | 'tech' | 'editor' | 'admin' => {
+    const cleanPath = path.toLowerCase().replace(/^\/+|\/+$/g, '');
+    if (['ismailalsaedy', 'profile', 'ismail', 'ismail-alsaedi'].includes(cleanPath)) {
+      return 'profile';
+    }
+    if (cleanPath === 'identity') return 'identity';
+    if (cleanPath === 'template') return 'template';
+    if (cleanPath === 'tech') return 'tech';
+    if (cleanPath === 'admin') return 'admin';
+    if (cleanPath === 'editor') return 'editor';
+    return 'articles';
+  };
+
+  const [activeTab, setActiveTabState] = useState<'articles' | 'profile' | 'identity' | 'template' | 'tech' | 'editor' | 'admin'>(() => {
+    if (typeof window !== 'undefined') {
+      return getTabFromPath(window.location.pathname);
+    }
+    return 'articles';
+  });
+
+  const setActiveTab = (tab: 'articles' | 'profile' | 'identity' | 'template' | 'tech' | 'editor' | 'admin') => {
+    setActiveTabState(tab);
+    if (typeof window !== 'undefined') {
+      let targetPath = '/';
+      if (tab === 'profile') targetPath = '/ismailalsaedy';
+      else if (tab !== 'articles') targetPath = `/${tab}`;
+
+      if (window.location.pathname !== targetPath) {
+        window.history.pushState({ tab }, '', targetPath);
+      }
+    }
+  };
+
+  // Sync browser back/forward navigation (popstate)
+  useEffect(() => {
+    const handlePopState = () => {
+      if (typeof window !== 'undefined') {
+        const tab = getTabFromPath(window.location.pathname);
+        setActiveTabState(tab);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>('الكل');
   const [searchQuery, setSearchQuery] = useState('');
   

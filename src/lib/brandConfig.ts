@@ -8,12 +8,12 @@ export const brandConfig = {
   colors: BRAND_COLORS,
   methodology: METHODOLOGY_STEPS,
   toneOfVoice: TONE_OF_VOICE_GUIDELINES,
-  baseUrl: 'https://esmail-alsaadi.com',
+  baseUrl: 'https://ismail-alsaedi.vercel.app',
   publisher: {
     '@type': 'Organization',
     'name': 'منصة إسماعيل الساعدي للحلول التقنية',
-    'url': 'https://esmail-alsaadi.com',
-    'logo': 'https://esmail-alsaadi.com/icon.png',
+    'url': 'https://ismail-alsaedi.vercel.app',
+    'logo': 'https://ismail-alsaedi.vercel.app/icon.png',
     'address': {
       '@type': 'PostalAddress',
       'addressLocality': BRAND_LOCATION.city,

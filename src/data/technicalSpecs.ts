@@ -13,21 +13,21 @@ export const RSS_SPECIFICATION_INFO = {
      xmlns:media="http://search.yahoo.com/mrss/">
   <channel>
     <title>إسماعيل الساعدي | مقالات برمجية وحلول تقنية</title>
-    <link>https://esmail-alsaadi.com</link>
+    <link>https://ismail-alsaedi.vercel.app</link>
     <description>حلول عملية ودراسات حالة بالأرقام في البرمجة، اليوميات، الإعلانات والخدمات.</description>
     <language>ar-sa</language>
     <copyright>جميع الحقوق محفوظة منصة إسماعيل الساعدي 2026</copyright>
     <lastBuildDate>Wed, 12 Aug 2026 17:00:00 +0300</lastBuildDate>
-    <atom:link href="https://esmail-alsaadi.com/rss.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://ismail-alsaedi.vercel.app/rss.xml" rel="self" type="application/rss+xml" />
     <image>
-      <url>https://esmail-alsaadi.com/icon.png</url>
+      <url>https://ismail-alsaedi.vercel.app/icon.png</url>
       <title>إسماعيل الساعدي</title>
-      <link>https://esmail-alsaadi.com</link>
+      <link>https://ismail-alsaedi.vercel.app</link>
     </image>
     <item>
       <title>كيف قلّلت زمن استجابة الـ API بنسبة 65% في تطبيق تجاري؟</title>
-      <link>https://esmail-alsaadi.com/articles/api-latency-reduction-case-study</link>
-      <guid isPermaLink="true">https://esmail-alsaadi.com/articles/api-latency-reduction-case-study</guid>
+      <link>https://ismail-alsaedi.vercel.app/articles/api-latency-reduction-case-study</link>
+      <guid isPermaLink="true">https://ismail-alsaedi.vercel.app/articles/api-latency-reduction-case-study</guid>
       <pubDate>Mon, 10 Aug 2026 10:00:00 +0300</pubDate>
       <dc:creator>إسماعيل الساعدي</dc:creator>
       <category>برمجة</category>
@@ -44,7 +44,7 @@ export const GOOGLE_SEARCH_RECOMMENDATIONS: TechnicalCheckitem[] = [
     description: 'إنشاء خريطة ديناميكية تضم جميع روابط المقالات المقسمة حسب الأهمية وتاريخ التحديث lastmod بإنساق ISO والتوقيت الرسمي لتكشيف عناكب قوقل.',
     codeSnippet: `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://esmail-alsaadi.com/articles/api-latency-reduction-case-study</loc>
+    <loc>https://ismail-alsaedi.vercel.app/articles/api-latency-reduction-case-study</loc>
     <lastmod>2026-08-12T17:00:00+03:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -60,7 +60,7 @@ import { google } from 'googleapis';
 const indexing = google.indexing('v3');
 await indexing.urlNotifications.publish({
   requestBody: {
-    url: 'https://esmail-alsaadi.com/articles/new-slug',
+    url: 'https://ismail-alsaedi.vercel.app/articles/new-slug',
     type: 'URL_UPDATED'
   }
 });`,
@@ -84,8 +84,8 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
-Sitemap: https://esmail-alsaadi.com/sitemap.xml
-RSS: https://esmail-alsaadi.com/rss.xml`,
+Sitemap: https://ismail-alsaedi.vercel.app/sitemap.xml
+RSS: https://ismail-alsaedi.vercel.app/rss.xml`,
     status: 'جاهز'
   }
 ];

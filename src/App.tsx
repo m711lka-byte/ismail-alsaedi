@@ -13,6 +13,7 @@ import { TemplateSection } from './components/TemplateSection';
 import { TechnicalSpecsSection } from './components/TechnicalSpecsSection';
 import { ArticleEditor } from './components/ArticleEditor';
 import { AdminDashboard } from './components/AdminDashboard';
+import { Footer } from './components/Footer';
 import { generatePersonKnowledgeGraph } from './lib/seo';
 import { 
   Sparkles, 
@@ -397,44 +398,8 @@ export default function App() {
 
       </main>
 
-      {/* Footer */}
-      <footer className="bg-[#0F172A] text-slate-400 text-xs border-t border-slate-800 py-10 mt-auto">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-          
-          <div className="space-y-3">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#059669] flex items-center justify-center text-white font-bold font-tajawal text-sm">
-                إس
-              </div>
-              <span className="text-white font-bold text-lg font-tajawal">إسماعيل الساعدي</span>
-            </div>
-            <p className="text-slate-400 leading-relaxed">
-              منصة مقالات وحلول تقنية احترافية توفر Value Added و Impact حقيقي عبر المنهجية المعتمدة والتجارب الميدانية بالأرقام.
-            </p>
-          </div>
-
-          <div className="space-y-2">
-            <span className="text-white font-bold font-tajawal text-sm block mb-2">التخصصات والمسارات:</span>
-            <ul className="space-y-1 text-slate-300">
-              <li className="flex items-center gap-1.5"><Code2 className="w-3.5 h-3.5 text-emerald-400" /> برمجة وتطوير الأنظمة وبناء الـ API</li>
-              <li className="flex items-center gap-1.5"><Flame className="w-3.5 h-3.5 text-purple-400" /> يوميات مبرمج وتجارب السوق السعودي</li>
-              <li className="flex items-center gap-1.5"><Megaphone className="w-3.5 h-3.5 text-amber-400" /> إعلانات وتكلفة الاستحواذ (CAC)</li>
-              <li className="flex items-center gap-1.5"><Briefcase className="w-3.5 h-3.5 text-blue-400" /> استشارات اختيار الشريك التقني</li>
-            </ul>
-          </div>
-
-          <div className="space-y-2">
-            <span className="text-white font-bold font-tajawal text-sm block mb-2">المعايير والتقنيات:</span>
-            <p className="text-slate-400 leading-relaxed">
-              تعتمد المنصة على **Google Firestore** للتخزين والتفاعل الحي، مع دعم **RSS 2.0 Feed**، و **Schema JSON-LD** لتهيئة الفهرسة الفورية ودعم **AI Overviews**.
-            </p>
-            <div className="pt-2 text-[11px] text-[#059669] font-bold">
-              جميع الحقوق محفوظة منصة إسماعيل الساعدي © {new Date().getFullYear()}
-            </div>
-          </div>
-
-        </div>
-      </footer>
+      {/* Dynamic Enhanced Footer with Careers & Contact */}
+      <Footer onNavigateTab={(tab) => setActiveTab(tab)} />
 
     </div>
   );

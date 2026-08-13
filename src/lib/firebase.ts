@@ -31,7 +31,12 @@ const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 export const db = getFirestore(app);
 
 // Check if Firebase is using fallback/demo credentials
-export const isFirestoreDemo = !import.meta.env.VITE_FIREBASE_PROJECT_ID;
+export const isFirestoreConfigured = Boolean(
+  import.meta.env.VITE_FIREBASE_PROJECT_ID && 
+  import.meta.env.VITE_FIREBASE_API_KEY && 
+  import.meta.env.VITE_FIREBASE_API_KEY !== "AIzaSyDummyKeyForPreviewModeOnly12345"
+);
+export const isFirestoreDemo = !isFirestoreConfigured;
 
 // Firestore Collection Reference
 const ARTICLES_COLLECTION = 'articles';
@@ -43,6 +48,11 @@ export function subscribeArticles(
   onUpdate: (articles: Article[]) => void,
   fallbackArticles: Article[]
 ) {
+  if (!isFirestoreConfigured) {
+    onUpdate(fallbackArticles);
+    return () => {};
+  }
+
   try {
     const q = query(collection(db, ARTICLES_COLLECTION), orderBy('publishDate', 'desc'));
     
@@ -77,6 +87,7 @@ export function subscribeArticles(
  * Save or update article in Firestore
  */
 export async function saveArticleToFirestore(article: Article): Promise<boolean> {
+  if (!isFirestoreConfigured) return false;
   try {
     const articleRef = doc(db, ARTICLES_COLLECTION, article.id);
     await setDoc(articleRef, {
@@ -94,6 +105,7 @@ export async function saveArticleToFirestore(article: Article): Promise<boolean>
  * Increment view count in Firestore
  */
 export async function incrementArticleViews(articleId: string) {
+  if (!isFirestoreConfigured) return;
   try {
     const articleRef = doc(db, ARTICLES_COLLECTION, articleId);
     await updateDoc(articleRef, {
@@ -108,6 +120,7 @@ export async function incrementArticleViews(articleId: string) {
  * Increment likes in Firestore
  */
 export async function toggleArticleLike(articleId: string) {
+  if (!isFirestoreConfigured) return;
   try {
     const articleRef = doc(db, ARTICLES_COLLECTION, articleId);
     await updateDoc(articleRef, {
@@ -122,6 +135,7 @@ export async function toggleArticleLike(articleId: string) {
  * Delete article from Firestore
  */
 export async function deleteArticleFromFirestore(articleId: string): Promise<boolean> {
+  if (!isFirestoreConfigured) return false;
   try {
     const articleRef = doc(db, ARTICLES_COLLECTION, articleId);
     await deleteDoc(articleRef);

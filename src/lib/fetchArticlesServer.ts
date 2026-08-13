@@ -13,6 +13,12 @@ const firebaseConfig = {
   appId: process.env.VITE_FIREBASE_APP_ID || "1:617716817799:web:a1b2c3d4e5f6g7h8"
 };
 
+const isConfigured = Boolean(
+  (process.env.VITE_FIREBASE_PROJECT_ID || process.env.FIREBASE_PROJECT_ID) &&
+  (process.env.VITE_FIREBASE_API_KEY || process.env.FIREBASE_API_KEY) &&
+  (process.env.VITE_FIREBASE_API_KEY || process.env.FIREBASE_API_KEY) !== "AIzaSyDummyKeyForPreviewModeOnly12345"
+);
+
 /**
  * Server-side helper to fetch merged initial + Firestore articles
  * for dynamic RSS, Sitemap, and API endpoints on both Vercel Serverless and Express.
@@ -24,6 +30,10 @@ export async function fetchAllArticlesServer(): Promise<Article[]> {
   INITIAL_ARTICLES.forEach(art => {
     articleMap.set(art.id, art);
   });
+
+  if (!isConfigured) {
+    return sortArticlesByScore(Array.from(articleMap.values()));
+  }
 
   // 2. Fetch from Firestore via Firebase JS SDK
   try {

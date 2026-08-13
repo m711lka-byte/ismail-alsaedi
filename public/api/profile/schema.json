@@ -1,0 +1,87 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ProfilePage",
+      "@id": "https://ismail-alsaedi.vercel.app/#profile",
+      "url": "https://ismail-alsaedi.vercel.app",
+      "name": "الملف الشخصي الرسمي | إسماعيل الساعدي",
+      "description": "إسماعيل الساعدي، خبير ومستشار تقني ومطور أنظمة سعودي متخصص في بناء المنصات السحابية، تطوير تطبيقات الجوال، تصميم البنية التحتية، إدارة الحملات الإعلانية الموجهة وتحسين تكلفة الاستحواذ (CAC)، بالإضافة إلى تقديم الخدمات الميدانية والاستشارات المباشرة لحراج والشركات في الطائف والمدينة المنورة وكافة مناطق المملكة.",
+      "inLanguage": "ar-SA",
+      "mainEntity": {
+        "@id": "https://ismail-alsaedi.vercel.app/#person"
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://ismail-alsaedi.vercel.app/#person",
+      "name": "إسماعيل الساعدي",
+      "alternateName": [
+        "Ismail Al-Saedi",
+        "الساعدي"
+      ],
+      "jobTitle": "مستشار تقني ومطور أنظمة سعودي",
+      "description": "إسماعيل الساعدي، خبير ومستشار تقني ومطور أنظمة سعودي متخصص في بناء المنصات السحابية، تطوير تطبيقات الجوال، تصميم البنية التحتية، إدارة الحملات الإعلانية الموجهة وتحسين تكلفة الاستحواذ (CAC)، بالإضافة إلى تقديم الخدمات الميدانية والاستشارات المباشرة لحراج والشركات في الطائف والمدينة المنورة وكافة مناطق المملكة.",
+      "image": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600",
+      "url": "https://ismail-alsaedi.vercel.app",
+      "email": "m711lka@gmail.com",
+      "telephone": "+966558953588",
+      "nationality": "SA",
+      "homeLocation": {
+        "@type": "Place",
+        "name": "مدينة الطائف",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "الطائف",
+          "addressRegion": "منطقة مكة المكرمة",
+          "addressCountry": "SA"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 21.2854,
+          "longitude": 40.4244
+        }
+      },
+      "sameAs": [
+        "https://wa.me/966558953588?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%20%D8%A5%D8%B3%D9%85%D8%A7%D8%B9%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%A7%D8%B9%D8%AF%D9%8A%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%AA%D9%88%D8%A7%D8%B5%D9%84%20%D8%A8%D8%AE%D8%B5%D9%88%D8%B5%20%D8%A7%D9%84%D8%AD%D9%84%D9%88%D9%84%20%D8%A7%D9%84%D8%AA%D9%82%D9%86%D9%8A%D8%A9",
+        "https://haraj.com.sa/users/%D8%A5%D8%B3%D9%85%D8%A7%D8%B9%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%A7%D8%B9%D8%AF%D9%8A",
+        "https://x.com/ismailalsaedy",
+        "https://tiktok.com/@ismailalsaedy",
+        "https://instagram.com/ismailalsaedy",
+        "https://linkedin.com/in/ismailalsaedy",
+        "https://github.com/ismailalsaedy",
+        "https://youtube.com/@ismailalsaedy",
+        "https://ismail-alsaedi.vercel.app"
+      ],
+      "knowsAbout": [
+        "تطوير التطبيقات والمنصات السحابية",
+        "إدارة وتحسين حملات السناب شات والتيك توك والإعلانات الرقمية",
+        "الخدمات الميدانية التقنية والاستشارات المباشرة للشركات وحراج",
+        "تصميم بنية قواعد البيانات السحابية واستراتيجيات الفهرسة والـ SEO",
+        "إدارة وتخفيض تكلفة الاستحواذ على العملاء (CAC) وتحسين العائد"
+      ]
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://ismail-alsaedi.vercel.app/#organization",
+      "name": "منصة إسماعيل الساعدي للحلول التقنية",
+      "url": "https://ismail-alsaedi.vercel.app",
+      "logo": "https://ismail-alsaedi.vercel.app/icon.png",
+      "founder": {
+        "@type": "Person",
+        "@id": "https://ismail-alsaedi.vercel.app/#person"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "الطائف",
+        "addressRegion": "منطقة مكة المكرمة",
+        "addressCountry": "SA"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 21.2854,
+        "longitude": 40.4244
+      }
+    }
+  ]
+}

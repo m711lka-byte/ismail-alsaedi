@@ -38,13 +38,17 @@ interface ArticleDetailProps {
   onBack: () => void;
   onUpdateLike?: (articleId: string) => void;
   onDeleteArticle?: (articleId: string) => void;
+  onNavigateToProfile?: () => void;
+  isAdmin?: boolean;
 }
 
 export const ArticleDetail: React.FC<ArticleDetailProps> = ({ 
   article, 
   onBack,
   onUpdateLike,
-  onDeleteArticle
+  onDeleteArticle,
+  onNavigateToProfile,
+  isAdmin
 }) => {
   const [currentArticle, setCurrentArticle] = useState<Article>(article);
   const [copiedSchema, setCopiedSchema] = useState(false);
@@ -240,21 +244,26 @@ export const ArticleDetail: React.FC<ArticleDetailProps> = ({
         {/* Article Toolbar & Author Header */}
         <div className="p-6 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           
-          {/* Author info (E-E-A-T) */}
-          <div className="flex items-center gap-3">
+          {/* Author info (E-E-A-T) - Clickable to Profile */}
+          <button 
+            type="button"
+            onClick={() => onNavigateToProfile && onNavigateToProfile()}
+            className="flex items-center gap-3 text-right hover:opacity-85 transition group/author border-b border-transparent hover:border-[#059669] pb-1"
+            title="انقر لزيارة الملف الشخصي الكامل للكاتب"
+          >
             <img 
               src={article.author.avatar} 
               alt={article.author.name}
-              className="w-12 h-12 rounded-full object-cover border-2 border-[#059669]"
+              className="w-12 h-12 rounded-full object-cover border-2 border-[#059669] group-hover/author:scale-105 transition-transform"
             />
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="font-bold text-[#0F172A] text-sm">{article.author.name}</span>
+                <span className="font-bold text-[#0F172A] text-sm group-hover/author:text-[#059669] underline-offset-2 group-hover/author:underline">{article.author.name}</span>
                 <Award className="w-4 h-4 text-emerald-600" />
               </div>
               <p className="text-xs text-slate-500 font-cairo">{article.author.role}</p>
             </div>
-          </div>
+          </button>
 
           {/* Metadata & Actions */}
           <div className="flex flex-wrap items-center gap-4 text-xs text-slate-600">
@@ -291,15 +300,17 @@ export const ArticleDetail: React.FC<ArticleDetailProps> = ({
               {copiedShare ? <Check className="w-4 h-4 text-emerald-600" /> : <Share2 className="w-4 h-4" />}
             </button>
 
-            {/* Delete Article Action */}
-            <button
-              onClick={() => setShowDeleteConfirm(true)}
-              className="flex items-center gap-1 bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-800 px-3 py-1.5 rounded-lg border border-red-200 font-bold transition text-xs"
-              title="حذف المقال"
-            >
-              <Trash2 className="w-3.5 h-3.5 text-red-600" />
-              <span>حذف المقال</span>
-            </button>
+            {/* Delete Article Action (Admin Only) */}
+            {isAdmin && (
+              <button
+                onClick={() => setShowDeleteConfirm(true)}
+                className="flex items-center gap-1 bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-800 px-3 py-1.5 rounded-lg border border-red-200 font-bold transition text-xs"
+                title="حذف المقال (للإدارة فقط)"
+              >
+                <Trash2 className="w-3.5 h-3.5 text-red-600" />
+                <span>حذف المقال</span>
+              </button>
+            )}
           </div>
 
         </div>

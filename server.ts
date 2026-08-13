@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import { createServer as createViteServer } from 'vite';
 import { INITIAL_ARTICLES } from './src/data/initialArticles';
-import { generateRssFeed, generateSitemap, generateArticleSchema } from './src/lib/seo';
+import { generateRssFeed, generateSitemap, generateArticleSchema, generatePersonKnowledgeGraph } from './src/lib/seo';
 import { brandConfig } from './src/lib/brandConfig';
 import { sortArticlesByScore } from './src/lib/articleRanking';
 import { fetchAllArticlesServer } from './src/lib/fetchArticlesServer';
@@ -89,6 +89,20 @@ Location: ${brandConfig.location.city}, ${brandConfig.location.country} (${brand
   // 4. API Route: Identity & Brand Specs with Taif Coordinates
   app.get('/api/identity', (req, res) => {
     res.json(brandConfig);
+  });
+
+  // 4b. API Route: Ismail Al-Saedi Person Profile & Knowledge Graph
+  app.get('/api/profile', (req, res) => {
+    res.json({
+      profile: brandConfig.profile,
+      location: brandConfig.location,
+      knowledgeGraph: generatePersonKnowledgeGraph()
+    });
+  });
+
+  app.get('/api/profile/schema.json', (req, res) => {
+    res.setHeader('Content-Type', 'application/ld+json; charset=UTF-8');
+    res.json(generatePersonKnowledgeGraph());
   });
 
   // 5. API Route: List & Create Articles (Sorted by Algorithm Score)

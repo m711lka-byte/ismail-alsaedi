@@ -6,8 +6,9 @@ export const BRAND_BIO = 'منصة مقالات وحلول تقنية احترا
 
 export const BRAND_LOCATION = {
   city: 'الطائف',
+  secondaryCity: 'المدينة المنورة',
   country: 'المملكة العربية السعودية',
-  address: 'الطائف، منطقة مكة المكرمة، المملكة العربية السعودية',
+  address: 'الطائف / المدينة المنورة، منطقة مكة المكرمة، المملكة العربية السعودية',
   coordinates: {
     latitude: 21.2854,
     longitude: 40.4244,
@@ -15,6 +16,53 @@ export const BRAND_LOCATION = {
   },
   postalCode: '26511',
   region: 'SA-02'
+};
+
+export const ISMAIL_PROFILE_DATA = {
+  name: 'إسماعيل الساعدي',
+  englishName: 'Ismail Al-Saedi',
+  jobTitle: 'مستشار تقني ومطور خبير • مهندس حلول سحابية وبرمجية',
+  avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400',
+  city: BRAND_LOCATION.city,
+  secondaryCity: BRAND_LOCATION.secondaryCity,
+  country: BRAND_LOCATION.country,
+  fullAddress: BRAND_LOCATION.address,
+  phone: '+966558953588',
+  whatsappUrl: 'https://wa.me/966558953588?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%20%D8%A5%D8%B3%D9%85%D8%A7%D8%B9%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%A7%D8%B9%D8%AF%D9%8A%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%AA%D9%88%D8%A7%D8%B5%D9%84%20%D8%A8%D8%AE%D8%B5%D9%88%D8%B5%20%D8%A7%D9%84%D8%AD%D9%84%D9%88%D9%84%20%D8%A7%D9%84%D8%AA%D9%82%D9%86%D9%8A%D8%A9',
+  harajUrl: 'https://haraj.com.sa/users/%D8%A5%D8%B3%D9%85%D8%A7%D8%B9%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%A7%D8%B9%D8%AF%D9%8A',
+  twitterUrl: 'https://x.com/ismailalsaedy',
+  tiktokUrl: 'https://tiktok.com/@ismailalsaedy',
+  instagramUrl: 'https://instagram.com/ismailalsaedy',
+  linkedinUrl: 'https://linkedin.com/in/ismailalsaedy',
+  githubUrl: 'https://github.com/ismailalsaedy',
+  youtubeUrl: 'https://youtube.com/@ismailalsaedy',
+  email: 'm711lka@gmail.com',
+  website: 'https://ismail-alsaedi.vercel.app',
+  bio: 'إسماعيل الساعدي، خبير ومستشار تقني ومطور أنظمة سعودي متخصص في بناء المنصات السحابية، تطوير تطبيقات الجوال، تصميم البنية التحتية، إدارة الحملات الإعلانية الموجهة وتحسين تكلفة الاستحواذ (CAC)، بالإضافة إلى تقديم الخدمات الميدانية والاستشارات المباشرة لحراج والشركات في الطائف والمدينة المنورة وكافة مناطق المملكة.',
+  specialties: [
+    'تطوير البرمجيات والأنظمة المخصصة (Full-Stack Software Development)',
+    'استشارات اختيار الشريك التقني وتقييم البنية التحتية',
+    'إدارة الإعلانات الرقمية وتحسين تكلفة الاستحواذ (CAC Optimization)',
+    'خدمات حراج الميدانية والاستشارات المباشرة للعملاء والمؤسسات',
+    'تهيئة محركات البحث المتقدمة والربط المباشر مع AI Knowledge Graph',
+    'حلول قواعد البيانات السحابية (Firebase Firestore & Cloud SQL)'
+  ],
+  knowsAbout: [
+    'Software Architecture & Cloud Solutions',
+    'Full-Stack Web & Mobile Development',
+    'Search Engine Optimization (SEO & Schema.org Graph)',
+    'Digital Advertising & Customer Acquisition Cost (CAC)',
+    'Haraj Marketplace Consulting & Field Services',
+    'Saudi E-Commerce & Business Systems',
+    'AI Overviews & LLM Knowledge Graphs',
+    'Firebase Firestore & Real-Time Sync'
+  ],
+  services: [
+    { title: 'برمجة وتطوير المنصات', desc: 'بناء تطبيقات ويب وجوال سريعة وآمنة ومصممة بأحدث التقنيات.' },
+    { title: 'استشارات حراج والميدان', desc: 'تنسيق وإشراف ميداني على الخدمات والصفقات التجارية عبر حراج.' },
+    { title: 'تحسين تكلفة الإعلانات (CAC)', desc: 'تحليل الأرقام وضمان أعلى عائد استثماري للزيارات والمبيعات.' },
+    { title: 'الاستشارات التقنية المباشرة', desc: 'تقييم الأكواد المصدري، اختيار التجهيزات، وإدارة الفرق البرمجية.' }
+  ]
 };
 
 export const BRAND_COLORS: BrandColor[] = [

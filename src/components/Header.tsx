@@ -9,18 +9,22 @@ import {
   Search, 
   Sparkles,
   Database,
-  Flame
+  Flame,
+  UserCheck,
+  ShieldCheck,
+  Lock
 } from 'lucide-react';
 
 interface HeaderProps {
-  activeTab: 'articles' | 'identity' | 'template' | 'tech' | 'editor';
-  setActiveTab: (tab: 'articles' | 'identity' | 'template' | 'tech' | 'editor') => void;
+  activeTab: 'articles' | 'profile' | 'identity' | 'template' | 'tech' | 'editor' | 'admin';
+  setActiveTab: (tab: 'articles' | 'profile' | 'identity' | 'template' | 'tech' | 'editor' | 'admin') => void;
   selectedCategory: CategoryType;
   setSelectedCategory: (cat: CategoryType) => void;
   searchQuery: string;
   setSearchQuery: (q: string) => void;
   articlesCount: number;
   isLiveDb: boolean;
+  isAdminLoggedIn?: boolean;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -31,7 +35,8 @@ export const Header: React.FC<HeaderProps> = ({
   searchQuery,
   setSearchQuery,
   articlesCount,
-  isLiveDb
+  isLiveDb,
+  isAdminLoggedIn
 }) => {
   const categories: CategoryType[] = ['الكل', 'برمجة', 'يوميات', 'إعلانات', 'خدمات'];
 
@@ -92,7 +97,7 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           )}
 
-          {/* DB & Quick Info */}
+          {/* DB & Quick Info + Discreet Admin Lock */}
           <div className="flex items-center gap-3 text-xs text-slate-300">
             <div className="flex items-center gap-1.5 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700">
               <Database className="w-3.5 h-3.5 text-emerald-400" />
@@ -102,6 +107,16 @@ export const Header: React.FC<HeaderProps> = ({
               <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
               <span>{articlesCount} مقال موثق</span>
             </div>
+
+            {/* Discreet lock button to open admin portal silently */}
+            <button
+              type="button"
+              onClick={() => setActiveTab('admin')}
+              className="p-2 text-slate-500 hover:text-emerald-400 transition rounded-lg hover:bg-slate-800 opacity-60 hover:opacity-100"
+              title="إدارة المنصة"
+            >
+              <Lock className="w-3.5 h-3.5" />
+            </button>
           </div>
 
         </div>
@@ -119,6 +134,18 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <BookOpen className="w-4 h-4" />
               <span>المقالات</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('profile')}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm transition ${
+                activeTab === 'profile'
+                  ? 'bg-[#059669] text-white shadow'
+                  : 'text-emerald-300 bg-emerald-950/40 border border-emerald-500/30 hover:text-white hover:bg-slate-800/60'
+              }`}
+            >
+              <UserCheck className="w-4 h-4 text-emerald-400" />
+              <span>بروفايل إسماعيل (Graph)</span>
             </button>
 
             <button
@@ -156,19 +183,37 @@ export const Header: React.FC<HeaderProps> = ({
               <Cpu className="w-4 h-4" />
               <span>التوصيات التقنية والـ SEO</span>
             </button>
+
+            {/* Admin tab is only visible in navbar when admin is ALREADY logged in */}
+            {isAdminLoggedIn && (
+              <button
+                onClick={() => setActiveTab('admin')}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-bold text-sm transition ${
+                  activeTab === 'admin'
+                    ? 'bg-[#059669] text-white shadow'
+                    : 'text-emerald-300 bg-emerald-950/40 border border-emerald-500/30 hover:text-white hover:bg-emerald-900/50'
+                }`}
+              >
+                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                <span>لوحة الأدمن (نشط)</span>
+              </button>
+            )}
           </nav>
 
-          <button
-            onClick={() => setActiveTab('editor')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm transition border ${
-              activeTab === 'editor'
-                ? 'bg-white text-[#0F172A] border-white'
-                : 'bg-emerald-600 hover:bg-emerald-500 text-white border-emerald-500 shadow'
-            }`}
-          >
-            <PlusCircle className="w-4 h-4" />
-            <span>إضافة مقال جديد</span>
-          </button>
+            {/* Add New Article button is strictly for logged-in Admin */}
+            {isAdminLoggedIn && (
+              <button
+                onClick={() => setActiveTab('editor')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm transition border ${
+                  activeTab === 'editor'
+                    ? 'bg-white text-[#0F172A] border-white'
+                    : 'bg-emerald-600 hover:bg-emerald-500 text-white border-emerald-500 shadow'
+                }`}
+              >
+                <PlusCircle className="w-4 h-4" />
+                <span>إضافة مقال جديد</span>
+              </button>
+            )}
         </div>
 
         {/* Categories Bar when Articles Tab is Active */}

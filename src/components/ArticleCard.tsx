@@ -22,10 +22,19 @@ interface ArticleCardProps {
   article: Article;
   onSelectArticle: (article: Article) => void;
   onDeleteArticle?: (articleId: string) => void;
+  onNavigateToProfile?: () => void;
   rankIndex?: number;
+  isAdmin?: boolean;
 }
 
-export const ArticleCard: React.FC<ArticleCardProps> = ({ article, onSelectArticle, onDeleteArticle, rankIndex }) => {
+export const ArticleCard: React.FC<ArticleCardProps> = ({ 
+  article, 
+  onSelectArticle, 
+  onDeleteArticle, 
+  onNavigateToProfile,
+  rankIndex,
+  isAdmin 
+}) => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -79,18 +88,20 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({ article, onSelectArtic
             )}
           </div>
 
-          {/* Delete Action Button on Top Left of Card */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowDeleteConfirm(true);
-            }}
-            className="absolute top-3 left-3 bg-red-600/90 hover:bg-red-700 text-white p-2 rounded-xl backdrop-blur-md shadow-md transition flex items-center gap-1 text-xs font-bold"
-            title="حذف المقال"
-          >
-            <Trash2 className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">حذف</span>
-          </button>
+          {/* Delete Action Button on Top Left of Card (Admin Only) */}
+          {isAdmin && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowDeleteConfirm(true);
+              }}
+              className="absolute top-3 left-3 bg-red-600/90 hover:bg-red-700 text-white p-2 rounded-xl backdrop-blur-md shadow-md transition flex items-center gap-1 text-xs font-bold z-10"
+              title="حذف المقال (للإدارة فقط)"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">حذف</span>
+            </button>
+          )}
         </div>
 
         {/* Content Body */}
@@ -144,14 +155,22 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({ article, onSelectArtic
 
       {/* Footer / Author & Metrics */}
       <div className="px-5 py-3 bg-slate-50 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600">
-        <div className="flex items-center gap-2">
+        <button 
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (onNavigateToProfile) onNavigateToProfile();
+          }}
+          className="flex items-center gap-2 hover:text-[#059669] transition group/author"
+          title="عرض الملف الشخصي للكاتب"
+        >
           <img 
             src={article.author.avatar} 
             alt={article.author.name}
-            className="w-6 h-6 rounded-full object-cover border border-slate-300"
+            className="w-6 h-6 rounded-full object-cover border border-slate-300 group-hover/author:border-[#059669]"
           />
-          <span className="text-xs font-semibold text-slate-700">{article.author.name}</span>
-        </div>
+          <span className="text-xs font-semibold text-slate-700 group-hover/author:text-[#059669] underline-offset-2 group-hover/author:underline">{article.author.name}</span>
+        </button>
 
         <div className="flex items-center gap-2.5">
           <span className="flex items-center gap-1 text-amber-600 font-extrabold bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">

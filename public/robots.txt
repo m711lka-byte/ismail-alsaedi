@@ -16,4 +16,7 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 
+# Dynamic Sitemap and RSS Feeds generated from Source Code:
 Sitemap: https://ismail-alsaedi.vercel.app/sitemap.xml
+RSS: https://ismail-alsaedi.vercel.app/rss.xml
+Location: الطائف, المملكة العربية السعودية (21.2854° N, 40.4244° E)

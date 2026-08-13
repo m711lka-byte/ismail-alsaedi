@@ -8,9 +8,12 @@ import { Header } from './components/Header';
 import { ArticleCard } from './components/ArticleCard';
 import { ArticleDetail } from './components/ArticleDetail';
 import { IdentitySection } from './components/IdentitySection';
+import { ProfileSection } from './components/ProfileSection';
 import { TemplateSection } from './components/TemplateSection';
 import { TechnicalSpecsSection } from './components/TechnicalSpecsSection';
 import { ArticleEditor } from './components/ArticleEditor';
+import { AdminDashboard } from './components/AdminDashboard';
+import { generatePersonKnowledgeGraph } from './lib/seo';
 import { 
   Sparkles, 
   Flame, 
@@ -28,9 +31,63 @@ import {
 export default function App() {
   const [articles, setArticles] = useState<Article[]>(() => getMergedArticles([]));
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
-  const [activeTab, setActiveTab] = useState<'articles' | 'identity' | 'template' | 'tech' | 'editor'>('articles');
+  const [activeTab, setActiveTab] = useState<'articles' | 'profile' | 'identity' | 'template' | 'tech' | 'editor' | 'admin'>('articles');
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>('الكل');
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // Admin Login State
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('ismail_admin_logged_in') === 'true';
+    }
+    return false;
+  });
+
+  const handleAdminLogin = (passcode: string): boolean => {
+    const input = passcode.trim();
+    const envPasscode = (import.meta as any).env?.VITE_ADMIN_PASSCODE;
+    const allowedPasscodes = [
+      'Ismail@Saedi#2026',
+      'ismailalsaedy2026',
+      'ismail@2026',
+      'ismail2026',
+      '2026'
+    ];
+    if (envPasscode) {
+      allowedPasscodes.push(envPasscode);
+    }
+
+    if (allowedPasscodes.includes(input)) {
+      setIsAdminLoggedIn(true);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('ismail_admin_logged_in', 'true');
+      }
+      return true;
+    }
+    return false;
+  };
+
+  const handleAdminLogout = () => {
+    setIsAdminLoggedIn(false);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('ismail_admin_logged_in');
+    }
+  };
+
+  // Inject Person Knowledge Graph in DOM <head> for AI crawlers & LLMs
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      const scriptId = 'json-ld-person-knowledge-graph';
+      let scriptTag = document.getElementById(scriptId) as HTMLScriptElement | null;
+      if (!scriptTag) {
+        scriptTag = document.createElement('script');
+        scriptTag.id = scriptId;
+        scriptTag.type = 'application/ld+json';
+        document.head.appendChild(scriptTag);
+      }
+      scriptTag.textContent = JSON.stringify(generatePersonKnowledgeGraph(), null, 2);
+    }
+  }, []);
 
   // Real-time Firestore & Server API sync with LocalStorage fail-safe
   useEffect(() => {
@@ -107,6 +164,7 @@ export default function App() {
         setSearchQuery={setSearchQuery}
         articlesCount={articles.length}
         isLiveDb={!isFirestoreDemo}
+        isAdminLoggedIn={isAdminLoggedIn}
       />
 
       {/* Main Body */}
@@ -121,6 +179,11 @@ export default function App() {
                 onBack={() => setSelectedArticle(null)}
                 onUpdateLike={handleUpdateLike}
                 onDeleteArticle={handleDeleteArticle}
+                onNavigateToProfile={() => {
+                  setSelectedArticle(null);
+                  setActiveTab('profile');
+                }}
+                isAdmin={isAdminLoggedIn}
               />
             ) : (
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-10">
@@ -153,14 +216,22 @@ export default function App() {
                       </div>
 
                       <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-slate-800 text-xs text-slate-400">
-                        <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveTab('profile');
+                          }}
+                          className="flex items-center gap-2 hover:text-emerald-400 transition"
+                          title="عرض ملف إسماعيل الساعدي"
+                        >
                           <img 
                             src={featuredArticle.author.avatar} 
                             alt={featuredArticle.author.name}
                             className="w-8 h-8 rounded-full border border-emerald-500"
                           />
-                          <span className="text-white font-bold">{featuredArticle.author.name}</span>
-                        </div>
+                          <span className="text-white font-bold hover:underline">{featuredArticle.author.name}</span>
+                        </button>
 
                         <span className="text-[#059669] font-bold text-sm flex items-center gap-1 group-hover:translate-x-[-4px] transition-transform">
                           قراءة دراسة الحالة المتميزة
@@ -212,6 +283,8 @@ export default function App() {
                         rankIndex={idx}
                         onSelectArticle={(art) => setSelectedArticle(art)}
                         onDeleteArticle={handleDeleteArticle}
+                        onNavigateToProfile={() => setActiveTab('profile')}
+                        isAdmin={isAdminLoggedIn}
                       />
                     ))}
                   </div>
@@ -227,21 +300,55 @@ export default function App() {
           </>
         )}
 
-        {/* VIEW 2: IDENTITY TAB */}
+        {/* VIEW 2: PROFILE & KNOWLEDGE GRAPH TAB */}
+        {activeTab === 'profile' && <ProfileSection />}
+
+        {/* VIEW 3: IDENTITY TAB */}
         {activeTab === 'identity' && <IdentitySection />}
 
-        {/* VIEW 3: TEMPLATE TAB */}
+        {/* VIEW 4: TEMPLATE TAB */}
         {activeTab === 'template' && <TemplateSection />}
 
-        {/* VIEW 4: TECHNICAL SPECS TAB */}
+        {/* VIEW 5: TECHNICAL SPECS TAB */}
         {activeTab === 'tech' && <TechnicalSpecsSection />}
 
-        {/* VIEW 5: NEW ARTICLE EDITOR */}
-        {activeTab === 'editor' && (
-          <ArticleEditor
-            onArticleCreated={handleArticleCreated}
-            onCancel={() => setActiveTab('articles')}
+        {/* VIEW 6: ADMIN DASHBOARD TAB */}
+        {activeTab === 'admin' && (
+          <AdminDashboard
+            articles={articles}
+            isAdminLoggedIn={isAdminLoggedIn}
+            onAdminLogin={handleAdminLogin}
+            onAdminLogout={handleAdminLogout}
+            onOpenCreateArticle={() => setActiveTab('editor')}
+            onDeleteArticle={handleDeleteArticle}
+            onSelectArticle={(art) => {
+              setSelectedArticle(art);
+              setActiveTab('articles');
+            }}
           />
+        )}
+
+        {/* VIEW 5: NEW ARTICLE EDITOR (Admin Protected) */}
+        {activeTab === 'editor' && (
+          isAdminLoggedIn ? (
+            <ArticleEditor
+              onArticleCreated={handleArticleCreated}
+              onCancel={() => setActiveTab('admin')}
+            />
+          ) : (
+            <AdminDashboard
+              articles={articles}
+              isAdminLoggedIn={isAdminLoggedIn}
+              onAdminLogin={handleAdminLogin}
+              onAdminLogout={handleAdminLogout}
+              onOpenCreateArticle={() => setActiveTab('editor')}
+              onDeleteArticle={handleDeleteArticle}
+              onSelectArticle={(art) => {
+                setSelectedArticle(art);
+                setActiveTab('articles');
+              }}
+            />
+          )
         )}
 
       </main>

@@ -2,6 +2,120 @@ import { Article } from '../types';
 import { brandConfig } from './brandConfig';
 
 /**
+ * Generate interconnected Person Knowledge Graph Schema.org (@graph)
+ * Optimized for AI engines (ChatGPT, Claude, Perplexity, Gemini) and Google Knowledge Graph.
+ */
+export function generatePersonKnowledgeGraph(baseUrl = brandConfig.baseUrl) {
+  const p = brandConfig.profile;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "ProfilePage",
+        "@id": `${baseUrl}/#profile`,
+        "url": baseUrl,
+        "name": `الملف الشخصي الرسمي | ${p.name}`,
+        "description": p.bio,
+        "inLanguage": "ar-SA",
+        "mainEntity": {
+          "@id": `${baseUrl}/#person`
+        }
+      },
+      {
+        "@type": "Person",
+        "@id": `${baseUrl}/#person`,
+        "name": p.name,
+        "alternateName": [p.englishName, "الساعدي"],
+        "jobTitle": p.jobTitle,
+        "description": p.bio,
+        "image": p.avatar,
+        "url": baseUrl,
+        "email": p.email,
+        "telephone": p.phone,
+        "nationality": "SA",
+        "homeLocation": {
+          "@type": "Place",
+          "name": `مدينة ${p.city}`,
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": p.city,
+            "addressRegion": "منطقة مكة المكرمة",
+            "addressCountry": "SA"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": brandConfig.location.coordinates.latitude,
+            "longitude": brandConfig.location.coordinates.longitude
+          }
+        },
+        "sameAs": [
+          p.whatsappUrl,
+          p.harajUrl,
+          p.twitterUrl,
+          p.tiktokUrl,
+          p.instagramUrl,
+          p.linkedinUrl,
+          p.githubUrl,
+          p.youtubeUrl,
+          p.website
+        ],
+        "knowsAbout": p.knowsAbout,
+        "contactPoint": [
+          {
+            "@type": "ContactPoint",
+            "@id": `${baseUrl}/#whatsapp`,
+            "telephone": p.phone,
+            "contactType": "customer support & consulting",
+            "url": p.whatsappUrl,
+            "availableLanguage": ["Arabic", "English"]
+          },
+          {
+            "@type": "ContactPoint",
+            "@id": `${baseUrl}/#haraj-services`,
+            "contactType": "field services & marketplace consulting",
+            "url": p.harajUrl,
+            "availableLanguage": ["Arabic"]
+          }
+        ],
+        "worksFor": {
+          "@id": `${baseUrl}/#organization`
+        }
+      },
+      {
+        "@type": "Organization",
+        "@id": `${baseUrl}/#organization`,
+        "name": "منصة إسماعيل الساعدي للحلول التقنية",
+        "url": baseUrl,
+        "logo": `${baseUrl}/icon.png`,
+        "founder": {
+          "@id": `${baseUrl}/#person`
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": p.city,
+          "addressCountry": "SA"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": brandConfig.location.coordinates.latitude,
+          "longitude": brandConfig.location.coordinates.longitude
+        }
+      },
+      ...p.services.map((srv, idx) => ({
+        "@type": "Service",
+        "@id": `${baseUrl}/#service-${idx + 1}`,
+        "name": srv.title,
+        "description": srv.desc,
+        "provider": {
+          "@id": `${baseUrl}/#person`
+        },
+        "areaServed": ["الطائف", "المدينة المنورة", "المملكة العربية السعودية"]
+      }))
+    ]
+  };
+}
+
+/**
  * Generate full JSON-LD Schema including BlogPosting, FAQPage, Person, Place, and Organization with Taif coordinates.
  */
 export function generateArticleSchema(article: Article, baseUrl = brandConfig.baseUrl) {

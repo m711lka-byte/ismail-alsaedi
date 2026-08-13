@@ -3,6 +3,8 @@
     { "source": "/rss.xml", "destination": "/api/rss" },
     { "source": "/sitemap.xml", "destination": "/api/sitemap" },
     { "source": "/robots.txt", "destination": "/api/robots" },
+    { "source": "/api/profile", "destination": "/api/profile" },
+    { "source": "/api/profile/schema.json", "destination": "/api/profile" },
     { "source": "/api/articles", "destination": "/api/articles" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]

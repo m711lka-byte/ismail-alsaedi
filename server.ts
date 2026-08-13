@@ -5,6 +5,7 @@ import { INITIAL_ARTICLES } from './src/data/initialArticles';
 import { generateRssFeed, generateSitemap, generateArticleSchema } from './src/lib/seo';
 import { brandConfig } from './src/lib/brandConfig';
 import { sortArticlesByScore } from './src/lib/articleRanking';
+import { fetchAllArticlesServer } from './src/lib/fetchArticlesServer';
 
 async function startServer() {
   const app = express();
@@ -44,9 +45,10 @@ Location: ${brandConfig.location.city}, ${brandConfig.location.country} (${brand
   });
 
   // 1. Dynamic RSS 2.0 Feed Endpoint
-  app.get('/rss.xml', (req, res) => {
+  app.get('/rss.xml', async (req, res) => {
     try {
-      const xml = generateRssFeed(currentArticles);
+      const articles = await fetchAllArticlesServer();
+      const xml = generateRssFeed(articles);
       res.setHeader('Content-Type', 'application/rss+xml; charset=UTF-8');
       res.status(200).send(xml);
     } catch (err) {
@@ -55,9 +57,10 @@ Location: ${brandConfig.location.city}, ${brandConfig.location.country} (${brand
   });
 
   // 2. Dynamic Sitemap XML Endpoint
-  app.get('/sitemap.xml', (req, res) => {
+  app.get('/sitemap.xml', async (req, res) => {
     try {
-      const xml = generateSitemap(currentArticles);
+      const articles = await fetchAllArticlesServer();
+      const xml = generateSitemap(articles);
       res.setHeader('Content-Type', 'application/xml; charset=UTF-8');
       res.status(200).send(xml);
     } catch (err) {
@@ -89,8 +92,13 @@ Location: ${brandConfig.location.city}, ${brandConfig.location.country} (${brand
   });
 
   // 5. API Route: List & Create Articles (Sorted by Algorithm Score)
-  app.get('/api/articles', (req, res) => {
-    res.json(sortArticlesByScore(currentArticles));
+  app.get('/api/articles', async (req, res) => {
+    try {
+      const articles = await fetchAllArticlesServer();
+      res.json(articles);
+    } catch {
+      res.json(sortArticlesByScore(currentArticles));
+    }
   });
 
   app.post('/api/articles', (req, res) => {

@@ -4,49 +4,44 @@
       "source": "/sitemap.xml",
       "headers": [
         { "key": "Content-Type", "value": "application/xml; charset=utf-8" },
-        { "key": "Cache-Control", "value": "public, max-age=3600, s-maxage=86400" }
+        { "key": "Cache-Control", "value": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800" }
       ]
     },
     {
       "source": "/rss.xml",
       "headers": [
         { "key": "Content-Type", "value": "application/rss+xml; charset=utf-8" },
-        { "key": "Cache-Control", "value": "public, max-age=3600, s-maxage=86400" }
+        { "key": "Cache-Control", "value": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800" }
       ]
     },
     {
       "source": "/atom.xml",
       "headers": [
         { "key": "Content-Type", "value": "application/atom+xml; charset=utf-8" },
-        { "key": "Cache-Control", "value": "public, max-age=3600, s-maxage=86400" }
+        { "key": "Cache-Control", "value": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800" }
       ]
     },
     {
       "source": "/robots.txt",
       "headers": [
         { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
-        { "key": "Cache-Control", "value": "public, max-age=3600, s-maxage=86400" }
+        { "key": "Cache-Control", "value": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800" }
       ]
     },
     {
       "source": "/llms.txt",
       "headers": [
         { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
-        { "key": "Cache-Control", "value": "public, max-age=3600, s-maxage=86400" }
+        { "key": "Cache-Control", "value": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800" }
       ]
     }
   ],
   "rewrites": [
-    { "source": "/sitemap.xml", "destination": "/api/sitemap" },
-    { "source": "/rss.xml", "destination": "/api/rss" },
-    { "source": "/atom.xml", "destination": "/api/atom" },
-    { "source": "/robots.txt", "destination": "/api/robots" },
-    { "source": "/llms.txt", "destination": "/api/llms" },
-    { "source": "/schema.json", "destination": "/api/profile/schema.json" },
+    { "source": "/api/articles", "destination": "/api/articles" },
+    { "source": "/api/profile", "destination": "/api/profile" },
     { "source": "/api/profile/schema.json", "destination": "/api/profile-schema" },
     { "source": "/api/profile/schema", "destination": "/api/profile-schema" },
-    { "source": "/api/profile", "destination": "/api/profile" },
-    { "source": "/api/articles", "destination": "/api/articles" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/schema.json", "destination": "/api/profile-schema" },
+    { "source": "/((?!api/|sitemap\\.xml|rss\\.xml|atom\\.xml|robots\\.txt|llms\\.txt).*)", "destination": "/index.html" }
   ]
 }

@@ -1,0 +1,27 @@
+# إسماعيل الساعدي | Ismail Al-Saedi
+> مستشار تقني ومطور أنظمة وخبير إعلانات وحلول ميدانية بسلطنة الطائف والمدينة المنورة وكافة مناطق المملكة العربية السعودية.
+
+## نبذة عن المنصة والكاتب
+إسماعيل الساعدي خبير ومستشار تقني ومطور أنظمة سعودي متخصص في:
+- بناء المنصات السحابية وتصميم قواعد البيانات وحلول Firestore/SQL الهجينة.
+- تطوير تطبيقات الجوال والواجهات عالية الأداء بلغة TypeScript و React و Node.js.
+- إدارة وتتبع الحملات الإعلانية الموجهة وتحسين تكلفة الاستحواذ على العملاء (CAC) على منصات Snapchat و TikTok.
+- تقديم الخدمات الميدانية والاستشارات المباشرة للشركات وحراج في الطائف والمدينة المنورة.
+
+## الأقسام والروابط الرئيسية
+- **المقالات والأبحاث التقنية**: https://ismail-alsaedi.vercel.app/
+- **الملف الشخصي الرسمي وشجرة المعرفة**: https://ismail-alsaedi.vercel.app/ismailalsaedy
+- **هوية المنصة وتقرير الأثر (Impact)**: https://ismail-alsaedi.vercel.app/identity
+- **المواصفات التقنية والـ SEO**: https://ismail-alsaedi.vercel.app/tech
+
+## خراطيم البيانات وتوثيق المعرفة للأذكياء الاصطناعيين (AI Crawlers & Knowledge Graph)
+- **Schema.org JSON-LD (Person Knowledge Graph)**: https://ismail-alsaedi.vercel.app/api/profile/schema.json
+- **XML Sitemap (مع دعم الصور والفيديوهات)**: https://ismail-alsaedi.vercel.app/sitemap.xml
+- **خلاصة المقالات (RSS 2.0 Feed)**: https://ismail-alsaedi.vercel.app/rss.xml
+- **واجهة البرمجة (Articles API)**: https://ismail-alsaedi.vercel.app/api/articles
+
+## معلومات التواصل المباشر
+- **واتساب**: +966558953588 (https://wa.me/966558953588)
+- **البريد الإلكتروني**: m711lka@gmail.com
+- **حراج**: https://haraj.com.sa/users/إسماعيل%20الساعدي
+- **الموقع**: الطائف / المدينة المنورة / المملكة العربية السعودية (21.2854° N, 40.4244° E)

@@ -1,13 +1,10 @@
-User-agent: *
-Allow: /
-
 User-agent: Googlebot
 Allow: /
 
-User-agent: Google-Extended
+User-agent: GPTBot
 Allow: /
 
-User-agent: GPTBot
+User-agent: OAI-SearchBot
 Allow: /
 
 User-agent: ClaudeBot
@@ -16,7 +13,11 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 
-# Dynamic Sitemap and RSS Feeds generated from Source Code:
+User-agent: *
+Allow: /
+
+# Dynamic Sitemap, LLMs Context, RSS Feeds & Geolocation
 Sitemap: https://ismail-alsaedi.vercel.app/sitemap.xml
 RSS: https://ismail-alsaedi.vercel.app/rss.xml
+LLMs-Txt: https://ismail-alsaedi.vercel.app/llms.txt
 Location: الطائف, المملكة العربية السعودية (21.2854° N, 40.4244° E)

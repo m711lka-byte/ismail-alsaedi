@@ -12,8 +12,8 @@ export function generatePersonKnowledgeGraph(baseUrl = brandConfig.baseUrl) {
     "@graph": [
       {
         "@type": "ProfilePage",
-        "@id": `${baseUrl}/#profile`,
-        "url": baseUrl,
+        "@id": `${baseUrl}/ismailalsaedy#profile`,
+        "url": `${baseUrl}/ismailalsaedy`,
         "name": `الملف الشخصي الرسمي | ${p.name}`,
         "description": p.bio,
         "inLanguage": "ar-SA",
@@ -28,7 +28,12 @@ export function generatePersonKnowledgeGraph(baseUrl = brandConfig.baseUrl) {
         "alternateName": [p.englishName, "الساعدي"],
         "jobTitle": p.jobTitle,
         "description": p.bio,
-        "image": p.avatar,
+        "image": {
+          "@type": "ImageObject",
+          "@id": `${baseUrl}/#author-avatar`,
+          "url": p.avatar,
+          "caption": p.name
+        },
         "url": baseUrl,
         "email": p.email,
         "telephone": p.phone,
@@ -116,66 +121,95 @@ export function generatePersonKnowledgeGraph(baseUrl = brandConfig.baseUrl) {
 }
 
 /**
- * Generate full JSON-LD Schema including BlogPosting, FAQPage, Person, Place, and Organization with Taif coordinates.
+ * Generate full JSON-LD Schema according to Google Search Central guidelines:
+ * Includes BlogPosting, ImageObject, FAQPage, Person, Place, Organization.
  */
 export function generateArticleSchema(article: Article, baseUrl = brandConfig.baseUrl) {
+  const rawDate = article.updatedDate || article.publishDate || '2026-08-12';
+  const isoPublishDate = article.publishDate.includes('T') ? article.publishDate : `${article.publishDate}T12:00:00+03:00`;
+  const isoModifiedDate = rawDate.includes('T') ? rawDate : `${rawDate}T12:00:00+03:00`;
+
+  const articleGraph: any[] = [
+    {
+      "@type": "BlogPosting",
+      "@id": `${baseUrl}/articles/${article.slug}#article`,
+      "headline": article.title,
+      "description": article.introDirectAnswer,
+      "inLanguage": "ar-SA",
+      "datePublished": isoPublishDate,
+      "dateModified": isoModifiedDate,
+      "image": {
+        "@type": "ImageObject",
+        "@id": `${baseUrl}/articles/${article.slug}#primaryimage`,
+        "url": article.coverImage,
+        "caption": article.coverAlt || article.title
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": `${baseUrl}/articles/${article.slug}`
+      },
+      "author": {
+        "@type": "Person",
+        "@id": `${baseUrl}/#person`,
+        "name": article.author.name,
+        "jobTitle": article.author.role,
+        "url": `${baseUrl}/ismailalsaedy`,
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": brandConfig.location.city,
+          "addressCountry": brandConfig.location.country
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": brandConfig.location.coordinates.latitude,
+          "longitude": brandConfig.location.coordinates.longitude
+        }
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": brandConfig.publisher.name,
+        "url": baseUrl,
+        "logo": {
+          "@type": "ImageObject",
+          "url": `${baseUrl}/icon.png`
+        }
+      },
+      "contentLocation": {
+        "@type": "Place",
+        "name": `مدينة ${brandConfig.location.city}`,
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": brandConfig.location.city,
+          "addressCountry": brandConfig.location.country
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": brandConfig.location.coordinates.latitude,
+          "longitude": brandConfig.location.coordinates.longitude
+        }
+      },
+      "keywords": article.tags.join(', ')
+    }
+  ];
+
+  if (article.faqs && article.faqs.length > 0) {
+    articleGraph.push({
+      "@type": "FAQPage",
+      "@id": `${baseUrl}/articles/${article.slug}#faq`,
+      "mainEntity": article.faqs.map(faq => ({
+        "@type": "Question",
+        "name": faq.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": faq.answer
+        }
+      }))
+    });
+  }
+
   return {
     "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "BlogPosting",
-        "@id": `${baseUrl}/articles/${article.slug}#article`,
-        "headline": article.title,
-        "description": article.introDirectAnswer,
-        "inLanguage": "ar-SA",
-        "datePublished": article.publishDate,
-        "dateModified": article.updatedDate || article.publishDate,
-        "image": article.coverImage,
-        "mainEntityOfPage": `${baseUrl}/articles/${article.slug}`,
-        "author": {
-          "@type": "Person",
-          "name": article.author.name,
-          "jobTitle": article.author.role,
-          "address": {
-            "@type": "PostalAddress",
-            "addressLocality": brandConfig.location.city,
-            "addressCountry": brandConfig.location.country
-          },
-          "geo": {
-            "@type": "GeoCoordinates",
-            "latitude": brandConfig.location.coordinates.latitude,
-            "longitude": brandConfig.location.coordinates.longitude
-          }
-        },
-        "publisher": brandConfig.publisher,
-        "contentLocation": {
-          "@type": "Place",
-          "name": `مدينة ${brandConfig.location.city}`,
-          "address": {
-            "@type": "PostalAddress",
-            "addressLocality": brandConfig.location.city,
-            "addressCountry": brandConfig.location.country
-          },
-          "geo": {
-            "@type": "GeoCoordinates",
-            "latitude": brandConfig.location.coordinates.latitude,
-            "longitude": brandConfig.location.coordinates.longitude
-          }
-        },
-        "keywords": article.tags.join(', ')
-      },
-      {
-        "@type": "FAQPage",
-        "mainEntity": (article.faqs || []).map(faq => ({
-          "@type": "Question",
-          "name": faq.question,
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": faq.answer
-          }
-        }))
-      }
-    ]
+    "@graph": articleGraph
   };
 }
 
@@ -218,38 +252,98 @@ ${itemsXml}
 }
 
 /**
- * Generate Sitemap XML dynamically from an array of articles
+ * Generate XML Sitemap with Google Image Sitemap Extensions (xmlns:image)
  */
 export function generateSitemap(articles: Article[], baseUrl = brandConfig.baseUrl): string {
-  const urlsXml = articles.map(article => {
-    const rawDate = article.updatedDate || article.publishDate || '2026-08-12';
+  const todayIso = new Date().toISOString().split('T')[0];
+
+  const staticPages = [
+    { url: `${baseUrl}/`, priority: '1.0', changefreq: 'daily' },
+    { url: `${baseUrl}/ismailalsaedy`, priority: '0.95', changefreq: 'weekly' },
+    { url: `${baseUrl}/identity`, priority: '0.85', changefreq: 'monthly' },
+    { url: `${baseUrl}/tech`, priority: '0.85', changefreq: 'monthly' }
+  ];
+
+  const staticPagesXml = staticPages.map(page => `  <url>
+    <loc>${page.url}</loc>
+    <lastmod>${todayIso}T17:00:00+03:00</lastmod>
+    <changefreq>${page.changefreq}</changefreq>
+    <priority>${page.priority}</priority>
+  </url>`).join('\n');
+
+  const articlePagesXml = articles.map(article => {
+    const rawDate = article.updatedDate || article.publishDate || todayIso;
     const isoDate = rawDate.includes('T') ? rawDate : `${rawDate}T17:00:00+03:00`;
+    
+    // Google Image Sitemap extension
+    const imageSnippet = article.coverImage ? `
+    <image:image>
+      <image:loc>${article.coverImage}</image:loc>
+      <image:title><![CDATA[${article.title}]]></image:title>
+      <image:caption><![CDATA[${article.coverAlt || article.introDirectAnswer}]]></image:caption>
+    </image:image>` : '';
+
     return `  <url>
     <loc>${baseUrl}/articles/${article.slug}</loc>
     <lastmod>${isoDate}</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.9</priority>${imageSnippet}
   </url>`;
   }).join('\n');
 
   return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>${baseUrl}/</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}T17:00:00+03:00</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-${urlsXml}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+${staticPagesXml}
+${articlePagesXml}
 </urlset>`.trim();
 }
 
 /**
- * Dynamically inject or update JSON-LD Schema in the client DOM <head>
+ * Dynamically inject or update JSON-LD Schema and meta tags in client DOM <head>
  */
 export function injectJsonLdInDOM(article: Article) {
   if (typeof document === 'undefined') return;
 
+  // Title
+  document.title = `${article.title} | ${brandConfig.name}`;
+
+  // Canonical tag
+  let canonicalTag = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
+  if (!canonicalTag) {
+    canonicalTag = document.createElement('link');
+    canonicalTag.rel = 'canonical';
+    document.head.appendChild(canonicalTag);
+  }
+  canonicalTag.href = `${brandConfig.baseUrl}/articles/${article.slug}`;
+
+  // Meta Description
+  let descMeta = document.querySelector('meta[name="description"]') as HTMLMetaElement;
+  if (!descMeta) {
+    descMeta = document.createElement('meta');
+    descMeta.name = 'description';
+    document.head.appendChild(descMeta);
+  }
+  descMeta.content = article.introDirectAnswer || article.title;
+
+  // Meta Robots
+  let robotsMeta = document.querySelector('meta[name="robots"]') as HTMLMetaElement;
+  if (!robotsMeta) {
+    robotsMeta = document.createElement('meta');
+    robotsMeta.name = 'robots';
+    document.head.appendChild(robotsMeta);
+  }
+  robotsMeta.content = 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+
+  // OpenGraph Meta Tags
+  let ogTitle = document.querySelector('meta[property="og:title"]') as HTMLMetaElement;
+  if (ogTitle) ogTitle.content = article.title;
+  let ogDesc = document.querySelector('meta[property="og:description"]') as HTMLMetaElement;
+  if (ogDesc) ogDesc.content = article.introDirectAnswer;
+  let ogImage = document.querySelector('meta[property="og:image"]') as HTMLMetaElement;
+  if (ogImage) ogImage.content = article.coverImage;
+
+  // JSON-LD Schema Injection
   const schema = generateArticleSchema(article);
   const scriptId = 'json-ld-article-schema';
   let scriptTag = document.getElementById(scriptId) as HTMLScriptElement | null;
@@ -263,7 +357,7 @@ export function injectJsonLdInDOM(article: Article) {
 
   scriptTag.textContent = JSON.stringify(schema, null, 2);
 
-  // Update meta location tags
+  // Geo Location Tags
   let geoPosTag = document.querySelector('meta[name="geo.position"]') as HTMLMetaElement;
   if (!geoPosTag) {
     geoPosTag = document.createElement('meta');

@@ -4,6 +4,7 @@ export const brandConfig = {
   name: BRAND_NAME,
   tagline: BRAND_TAGLINE,
   bio: BRAND_BIO,
+  jobTitle: ISMAIL_PROFILE_DATA.jobTitle,
   location: BRAND_LOCATION,
   colors: BRAND_COLORS,
   methodology: METHODOLOGY_STEPS,

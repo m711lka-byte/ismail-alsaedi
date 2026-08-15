@@ -1,5 +1,6 @@
 {
   "rewrites": [
+    { "source": "/llms.txt", "destination": "/api/llms" },
     { "source": "/rss.xml", "destination": "/api/rss" },
     { "source": "/sitemap.xml", "destination": "/api/sitemap" },
     { "source": "/robots.txt", "destination": "/api/robots" },

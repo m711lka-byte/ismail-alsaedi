@@ -213,6 +213,16 @@ export function generateArticleSchema(article: Article, baseUrl = brandConfig.ba
   };
 }
 
+function escapeXml(str: string): string {
+  if (!str) return '';
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
 /**
  * Generate complete Atom 1.0 XML feed dynamically from an array of articles
  */
@@ -319,7 +329,7 @@ export function generateSitemap(articles: Article[], baseUrl = brandConfig.baseU
     // Google Image Sitemap extension
     const imageSnippet = article.coverImage ? `
     <image:image>
-      <image:loc>${article.coverImage}</image:loc>
+      <image:loc>${escapeXml(article.coverImage)}</image:loc>
       <image:title><![CDATA[${article.title}]]></image:title>
       <image:caption><![CDATA[${article.coverAlt || article.introDirectAnswer}]]></image:caption>
     </image:image>` : '';

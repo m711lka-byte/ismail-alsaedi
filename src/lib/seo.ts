@@ -279,14 +279,14 @@ export function generateRssFeed(articles: Article[], baseUrl = brandConfig.baseU
       <content:encoded><![CDATA[${article.contentMarkdown}]]></content:encoded>
     </item>`).join('\n');
 
-  return `<?xml version="1.0" encoding="UTF-8" ?>
+  return `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" 
      xmlns:content="http://purl.org/rss/1.0/modules/content/"
      xmlns:dc="http://purl.org/dc/elements/1.1/"
      xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title><![CDATA[${brandConfig.name} | مقالات برمجية وحلول تقنية - ${brandConfig.location.city}]]></title>
-    <link>${baseUrl}</link>
+    <link>${baseUrl}/</link>
     <description><![CDATA[${brandConfig.bio} - ${brandConfig.location.address}]]></description>
     <language>ar-sa</language>
     <copyright><![CDATA[جميع الحقوق محفوظة منصة إسماعيل الساعدي ${new Date().getFullYear()}]]></copyright>
@@ -295,7 +295,7 @@ export function generateRssFeed(articles: Article[], baseUrl = brandConfig.baseU
     <image>
       <url>${baseUrl}/icon.png</url>
       <title><![CDATA[${brandConfig.name}]]></title>
-      <link>${baseUrl}</link>
+      <link>${baseUrl}/</link>
     </image>
 ${itemsXml}
   </channel>
@@ -317,14 +317,14 @@ export function generateSitemap(articles: Article[], baseUrl = brandConfig.baseU
 
   const staticPagesXml = staticPages.map(page => `  <url>
     <loc>${page.url}</loc>
-    <lastmod>${todayIso}T17:00:00+03:00</lastmod>
+    <lastmod>${todayIso}</lastmod>
     <changefreq>${page.changefreq}</changefreq>
     <priority>${page.priority}</priority>
   </url>`).join('\n');
 
   const articlePagesXml = articles.map(article => {
     const rawDate = article.updatedDate || article.publishDate || todayIso;
-    const isoDate = rawDate.includes('T') ? rawDate : `${rawDate}T17:00:00+03:00`;
+    const isoDate = rawDate.split('T')[0];
     
     // Google Image Sitemap extension
     const imageSnippet = article.coverImage ? `

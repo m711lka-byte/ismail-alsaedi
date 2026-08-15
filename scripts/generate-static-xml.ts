@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { INITIAL_ARTICLES } from '../src/data/initialArticles';
-import { generateRssFeed, generateSitemap } from '../src/lib/seo';
+import { generateRssFeed, generateAtomFeed, generateSitemap } from '../src/lib/seo';
 import { sortArticlesByScore } from '../src/lib/articleRanking';
 
 const publicDir = path.join(process.cwd(), 'public');
@@ -15,6 +15,11 @@ const articles = sortArticlesByScore(INITIAL_ARTICLES);
 const rssXml = generateRssFeed(articles);
 fs.writeFileSync(path.join(publicDir, 'rss.xml'), rssXml, 'utf-8');
 console.log('Successfully generated public/rss.xml');
+
+// Generate Atom XML
+const atomXml = generateAtomFeed(articles);
+fs.writeFileSync(path.join(publicDir, 'atom.xml'), atomXml, 'utf-8');
+console.log('Successfully generated public/atom.xml');
 
 // Generate Sitemap XML
 const sitemapXml = generateSitemap(articles);

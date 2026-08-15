@@ -35,71 +35,84 @@ export async function fetchAllArticlesServer(): Promise<Article[]> {
     return sortArticlesByScore(Array.from(articleMap.values()));
   }
 
-  // 2. Fetch from Firestore via Firebase JS SDK
-  try {
-    const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-    const db = getFirestore(app);
-    const querySnapshot = await getDocs(collection(db, 'articles'));
-
-    if (!querySnapshot.empty) {
-      querySnapshot.forEach((docSnap) => {
-        const data = docSnap.data() as Article;
-        if (data && data.title) {
-          articleMap.set(docSnap.id || data.id, {
-            ...data,
-            id: docSnap.id || data.id
-          });
-        }
-      });
-    }
-  } catch (sdkErr) {
-    console.warn("Server Firestore SDK fetch notice (attempting REST API fallback):", sdkErr);
-
-    // 3. REST API Fallback
+  // Safety race: never allow network operations to hang longer than 2.5 seconds
+  const fetchWithTimeout = async () => {
+    // 2. Fetch from Firestore via Firebase JS SDK
     try {
-      const projectId = firebaseConfig.projectId;
-      const res = await fetch(`https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/articles`);
-      if (res.ok) {
-        const json: any = await res.json();
-        if (json.documents && Array.isArray(json.documents)) {
-          json.documents.forEach((docItem: any) => {
-            const fields = docItem.fields;
-            if (fields) {
-              const parseValue = (v: any): any => {
-                if (!v) return null;
-                if (v.stringValue !== undefined) return v.stringValue;
-                if (v.integerValue !== undefined) return parseInt(v.integerValue, 10);
-                if (v.doubleValue !== undefined) return parseFloat(v.doubleValue);
-                if (v.booleanValue !== undefined) return v.booleanValue;
-                if (v.arrayValue !== undefined) {
-                  return (v.arrayValue.values || []).map(parseValue);
-                }
-                if (v.mapValue !== undefined) {
-                  const obj: any = {};
-                  for (const key in v.mapValue.fields || {}) {
-                    obj[key] = parseValue(v.mapValue.fields[key]);
-                  }
-                  return obj;
-                }
-                return null;
-              };
+      const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+      const db = getFirestore(app);
+      const querySnapshot = await getDocs(collection(db, 'articles'));
 
-              const parsedArticle: any = {};
-              for (const fieldKey in fields) {
-                parsedArticle[fieldKey] = parseValue(fields[fieldKey]);
-              }
-
-              if (parsedArticle.id && parsedArticle.title) {
-                articleMap.set(parsedArticle.id, parsedArticle as Article);
-              }
-            }
-          });
-        }
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach((docSnap) => {
+          const data = docSnap.data() as Article;
+          if (data && data.title) {
+            articleMap.set(docSnap.id || data.id, {
+              ...data,
+              id: docSnap.id || data.id
+            });
+          }
+        });
       }
-    } catch (restErr) {
-      console.warn("REST API fallback failed, using hardcoded initial articles:", restErr);
+    } catch (sdkErr) {
+      // 3. REST API Fallback with strict 2-second abort timeout
+      try {
+        const projectId = firebaseConfig.projectId;
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2000);
+        const res = await fetch(`https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/articles`, {
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+
+        if (res.ok) {
+          const json: any = await res.json();
+          if (json.documents && Array.isArray(json.documents)) {
+            json.documents.forEach((docItem: any) => {
+              const fields = docItem.fields;
+              if (fields) {
+                const parseValue = (v: any): any => {
+                  if (!v) return null;
+                  if (v.stringValue !== undefined) return v.stringValue;
+                  if (v.integerValue !== undefined) return parseInt(v.integerValue, 10);
+                  if (v.doubleValue !== undefined) return parseFloat(v.doubleValue);
+                  if (v.booleanValue !== undefined) return v.booleanValue;
+                  if (v.arrayValue !== undefined) {
+                    return (v.arrayValue.values || []).map(parseValue);
+                  }
+                  if (v.mapValue !== undefined) {
+                    const obj: any = {};
+                    for (const key in v.mapValue.fields || {}) {
+                      obj[key] = parseValue(v.mapValue.fields[key]);
+                    }
+                    return obj;
+                  }
+                  return null;
+                };
+
+                const parsedArticle: any = {};
+                for (const fieldKey in fields) {
+                  parsedArticle[fieldKey] = parseValue(fields[fieldKey]);
+                }
+
+                if (parsedArticle.id && parsedArticle.title) {
+                  articleMap.set(parsedArticle.id, parsedArticle as Article);
+                }
+              }
+            });
+          }
+        }
+      } catch {
+        // Graceful fallback to initial articles
+      }
     }
-  }
+  };
+
+  const timeoutPromise = new Promise<void>((resolve) => {
+    setTimeout(resolve, 2500);
+  });
+
+  await Promise.race([fetchWithTimeout(), timeoutPromise]);
 
   const merged = Array.from(articleMap.values());
   return sortArticlesByScore(merged);

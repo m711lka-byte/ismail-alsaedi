@@ -1,15 +1,17 @@
 import { generateSitemap } from '../src/lib/seo';
 import { fetchAllArticlesServer } from '../src/lib/fetchArticlesServer';
+import { INITIAL_ARTICLES } from '../src/data/initialArticles';
 
 export default async function handler(req: any, res: any) {
   try {
-    const articles = await fetchAllArticlesServer();
-    const xml = generateSitemap(articles);
+    const articles = await fetchAllArticlesServer().catch(() => INITIAL_ARTICLES);
+    const xml = generateSitemap(articles && articles.length ? articles : INITIAL_ARTICLES);
     res.setHeader('Content-Type', 'application/xml; charset=UTF-8');
-    res.setHeader('Cache-Control', 'public, max-age=60, s-maxage=60, stale-while-revalidate=300');
+    res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=86400');
     res.status(200).send(xml);
   } catch (err) {
-    console.error('Error in Vercel /api/sitemap handler:', err);
-    res.status(500).send('Error generating sitemap');
+    const fallbackXml = generateSitemap(INITIAL_ARTICLES);
+    res.setHeader('Content-Type', 'application/xml; charset=UTF-8');
+    res.status(200).send(fallbackXml);
   }
 }

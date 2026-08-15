@@ -333,23 +333,28 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTab }) => {
             {onNavigateTab && (
               <>
                 <li>
-                  <button onClick={() => onNavigateTab('articles')} className="hover:text-emerald-400 transition flex items-center gap-1.5">
+                  <button onClick={() => onNavigateTab('articles')} className="hover:text-emerald-400 transition flex items-center gap-1.5 text-xs">
                     <ChevronLeft className="w-3 h-3 text-emerald-500" /> المقالات والأبحاث التقنية
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => onNavigateTab('profile')} className="hover:text-emerald-400 transition flex items-center gap-1.5">
+                  <button onClick={() => onNavigateTab('profile')} className="hover:text-emerald-400 transition flex items-center gap-1.5 text-xs">
                     <ChevronLeft className="w-3 h-3 text-emerald-500" /> الملف الشخصي و Knowledge Graph
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => onNavigateTab('identity')} className="hover:text-emerald-400 transition flex items-center gap-1.5">
-                    <ChevronLeft className="w-3 h-3 text-emerald-500" /> هوية المنصة والأثر (Impact)
+                  <button onClick={() => onNavigateTab('identity')} className="hover:text-emerald-400 transition flex items-center gap-1.5 text-xs">
+                    <ChevronLeft className="w-3 h-3 text-emerald-500" /> الهوية البصرية والمنهجية
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => onNavigateTab('tech')} className="hover:text-emerald-400 transition flex items-center gap-1.5">
-                    <ChevronLeft className="w-3 h-3 text-emerald-500" /> المواصفات التقنية والـ SEO
+                  <button onClick={() => onNavigateTab('template')} className="hover:text-emerald-400 transition flex items-center gap-1.5 text-xs">
+                    <ChevronLeft className="w-3 h-3 text-emerald-500" /> قالب مقال معتمد
+                  </button>
+                </li>
+                <li className="hidden">
+                  <button onClick={() => onNavigateTab('tech')} className="hover:text-emerald-400 transition flex items-center gap-1.5 text-xs" aria-hidden="true">
+                    <ChevronLeft className="w-3 h-3 text-emerald-500" /> التوصيات التقنية والـ SEO
                   </button>
                 </li>
               </>

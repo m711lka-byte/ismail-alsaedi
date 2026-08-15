@@ -21,10 +21,12 @@ Allow: /
 User-agent: *
 Allow: /
 
-# Dynamic Sitemap, LLMs Context, RSS Feeds & Geolocation
+# Feeds & AI Context Discovery Links
+# RSS 2.0 Feed: ${brandConfig.baseUrl}/rss.xml
+# Atom 1.0 Feed: ${brandConfig.baseUrl}/atom.xml
+# LLMs Context: ${brandConfig.baseUrl}/llms.txt
+# Location: ${brandConfig.location.city}, ${brandConfig.location.country} (${brandConfig.location.coordinates.formatted})
+
 Sitemap: ${brandConfig.baseUrl}/sitemap.xml
-RSS: ${brandConfig.baseUrl}/rss.xml
-LLMs-Txt: ${brandConfig.baseUrl}/llms.txt
-Location: ${brandConfig.location.city}, ${brandConfig.location.country} (${brandConfig.location.coordinates.formatted})
 `);
 }

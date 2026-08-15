@@ -16,8 +16,10 @@ Allow: /
 User-agent: *
 Allow: /
 
-# Dynamic Sitemap, LLMs Context, RSS Feeds & Geolocation
+# Feeds & AI Context Discovery Links
+# RSS 2.0 Feed: https://ismail-alsaedi.vercel.app/rss.xml
+# Atom 1.0 Feed: https://ismail-alsaedi.vercel.app/atom.xml
+# LLMs Context: https://ismail-alsaedi.vercel.app/llms.txt
+# Location: Taif / Medina, Saudi Arabia
+
 Sitemap: https://ismail-alsaedi.vercel.app/sitemap.xml
-RSS: https://ismail-alsaedi.vercel.app/rss.xml
-LLMs-Txt: https://ismail-alsaedi.vercel.app/llms.txt
-Location: الطائف, المملكة العربية السعودية (21.2854° N, 40.4244° E)

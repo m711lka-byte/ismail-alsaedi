@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import { createServer as createViteServer } from 'vite';
 import { INITIAL_ARTICLES } from './src/data/initialArticles';
-import { generateRssFeed, generateSitemap, generateArticleSchema, generatePersonKnowledgeGraph } from './src/lib/seo';
+import { generateRssFeed, generateAtomFeed, generateSitemap, generateArticleSchema, generatePersonKnowledgeGraph } from './src/lib/seo';
 import { brandConfig } from './src/lib/brandConfig';
 import { sortArticlesByScore } from './src/lib/articleRanking';
 import { fetchAllArticlesServer } from './src/lib/fetchArticlesServer';
@@ -38,11 +38,13 @@ Allow: /
 User-agent: *
 Allow: /
 
-# Dynamic Sitemap, LLMs Context, RSS Feeds & Geolocation
+# Feeds & AI Context Discovery Links
+# RSS 2.0 Feed: ${brandConfig.baseUrl}/rss.xml
+# Atom 1.0 Feed: ${brandConfig.baseUrl}/atom.xml
+# LLMs Context: ${brandConfig.baseUrl}/llms.txt
+# Location: ${brandConfig.location.city}, ${brandConfig.location.country} (${brandConfig.location.coordinates.formatted})
+
 Sitemap: ${brandConfig.baseUrl}/sitemap.xml
-RSS: ${brandConfig.baseUrl}/rss.xml
-LLMs-Txt: ${brandConfig.baseUrl}/llms.txt
-Location: ${brandConfig.location.city}, ${brandConfig.location.country} (${brandConfig.location.coordinates.formatted})
 `);
   });
 
@@ -90,6 +92,18 @@ Location: ${brandConfig.location.city}, ${brandConfig.location.country} (${brand
       res.status(200).send(xml);
     } catch (err) {
       res.status(500).send('Error generating RSS feed');
+    }
+  });
+
+  // 1b. Dynamic Atom 1.0 Feed Endpoint
+  app.get('/atom.xml', async (req, res) => {
+    try {
+      const articles = await fetchAllArticlesServer();
+      const xml = generateAtomFeed(articles);
+      res.setHeader('Content-Type', 'application/atom+xml; charset=UTF-8');
+      res.status(200).send(xml);
+    } catch (err) {
+      res.status(500).send('Error generating Atom feed');
     }
   });
 

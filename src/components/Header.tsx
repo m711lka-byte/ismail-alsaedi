@@ -51,12 +51,14 @@ export const Header: React.FC<HeaderProps> = ({
         
         {/* Dynamic Source Files Direct Links */}
         <div className="flex items-center gap-2 text-[11px] bg-emerald-950/60 px-3 py-0.5 rounded-full border border-emerald-400/30">
-          <span className="text-emerald-200">الملفات البرمجية الحية (Source Code):</span>
+          <span className="text-emerald-200">الملفات الحية:</span>
           <a href="/robots.txt" target="_blank" rel="noopener noreferrer" className="underline hover:text-emerald-200 font-mono">robots.txt</a>
           <span>•</span>
           <a href="/sitemap.xml" target="_blank" rel="noopener noreferrer" className="underline hover:text-emerald-200 font-mono">sitemap.xml</a>
           <span>•</span>
           <a href="/rss.xml" target="_blank" rel="noopener noreferrer" className="underline hover:text-emerald-200 font-mono">rss.xml</a>
+          <span>•</span>
+          <a href="/atom.xml" target="_blank" rel="noopener noreferrer" className="underline hover:text-emerald-200 font-mono">atom.xml</a>
         </div>
       </div>
 
@@ -172,13 +174,15 @@ export const Header: React.FC<HeaderProps> = ({
               <span>قالب مقال معتمد</span>
             </button>
 
+            {/* Hidden Tech Button - Code preserved as requested */}
             <button
               onClick={() => setActiveTab('tech')}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm transition ${
+              className={`hidden items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm transition ${
                 activeTab === 'tech'
                   ? 'bg-[#059669] text-white shadow'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
+              aria-hidden="true"
             >
               <Cpu className="w-4 h-4" />
               <span>التوصيات التقنية والـ SEO</span>

@@ -214,6 +214,47 @@ export function generateArticleSchema(article: Article, baseUrl = brandConfig.ba
 }
 
 /**
+ * Generate complete Atom 1.0 XML feed dynamically from an array of articles
+ */
+export function generateAtomFeed(articles: Article[], baseUrl = brandConfig.baseUrl): string {
+  const entriesXml = articles.map(article => {
+    const rawDate = article.updatedDate || article.publishDate || new Date().toISOString();
+    const isoDate = rawDate.includes('T') ? rawDate : `${rawDate}T12:00:00.000Z`;
+    return `  <entry>
+    <title type="text"><![CDATA[${article.title}]]></title>
+    <link rel="alternate" type="text/html" href="${baseUrl}/articles/${article.slug}"/>
+    <id>${baseUrl}/articles/${article.slug}</id>
+    <updated>${isoDate}</updated>
+    <published>${article.publishDate.includes('T') ? article.publishDate : `${article.publishDate}T12:00:00.000Z`}</published>
+    <author>
+      <name><![CDATA[${article.author.name}]]></name>
+      <uri>${baseUrl}/ismailalsaedy</uri>
+    </author>
+    <summary type="html"><![CDATA[${article.introDirectAnswer}]]></summary>
+    <content type="html"><![CDATA[${article.contentMarkdown}]]></content>
+    <category term="${article.category}"/>
+  </entry>`;
+  }).join('\n');
+
+  return `<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title><![CDATA[${brandConfig.name} | مقالات برمجية وحلول تقنية - ${brandConfig.location.city}]]></title>
+  <subtitle><![CDATA[${brandConfig.bio}]]></subtitle>
+  <link href="${baseUrl}/atom.xml" rel="self" type="application/atom+xml"/>
+  <link href="${baseUrl}/" rel="alternate" type="text/html"/>
+  <updated>${new Date().toISOString()}</updated>
+  <id>${baseUrl}/</id>
+  <author>
+    <name><![CDATA[${brandConfig.profile.name}]]></name>
+    <email>${brandConfig.profile.email}</email>
+    <uri>${baseUrl}/ismailalsaedy</uri>
+  </author>
+  <icon>${baseUrl}/icon.png</icon>
+${entriesXml}
+</feed>`.trim();
+}
+
+/**
  * Generate complete RSS 2.0 XML dynamically from an array of articles
  */
 export function generateRssFeed(articles: Article[], baseUrl = brandConfig.baseUrl): string {
